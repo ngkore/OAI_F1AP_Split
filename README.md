@@ -1,6 +1,8 @@
 # OAI F1AP CU/DU Split Mode Deployment Guide
 
-This guide explains how to deploy and run the OAI gNB Central Unit (CU) and Distributed Unit (DU) in **F1 split mode**.
+<img width="2816" height="1536" alt="image" src="https://github.com/user-attachments/assets/16fe20a8-eeca-4ecf-b8c0-7dc86499cdce" />
+
+> This guide explains how to deploy and run the OAI gNB Central Unit (CU) and Distributed Unit (DU) in **F1 split mode**.
 
 You can run the CU/DU setup in two ways:
 
