@@ -1,177 +1,277 @@
-# OAI_CU_DU_Split
+# OAI F1AP CU/DU Split Mode Deployment Guide
 
-### Hardware Requirement:
-- Minimum two servers are required
-- Current test is done on:
-    - Server one --> CU --> local_IP --> 192.168.1.233
-    - Server six --> DU --> local_IP --> 192.168.1.56
+This guide explains how to deploy and run the OAI gNB Central Unit (CU) and Distributed Unit (DU) in **F1 split mode**.
 
-### Steps to follow for the deployment:
+You can run the CU/DU setup in two ways:
 
-1. Clone this repo on both the servers(CU and DU)
-```bash
-git clone -b develop_v1.0 https://github.com/NgKore47/openairinterface5g.git
+1. **On the same server**
+2. **On different servers**
+
+For a complete end-to-end (E2E) test, you will need:
+
+* UE (OAI nrUE)
+* gNB DU
+* gNB CU
+* OAI 5G Core (CN5G)
+
+Before starting, ensure the OAI 5G Core is installed and configured:
+
+**OAI CN5G Setup**
+Follow: [https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/doc/NR_SA_Tutorial_OAI_CN5G.md](https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/doc/NR_SA_Tutorial_OAI_CN5G.md)
+
+Once the core is running, proceed to deploying the CU and DU.
+
+> For more details on F1 interface configuration, refer to:
+> [https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/doc/F1AP/F1-design.md#how-to-run](https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/doc/F1AP/F1-design.md#how-to-run)
+
+---
+
+## 1. Running CU and DU on the Same Server
+
+<details>
+<summary><strong>Expand steps</strong></summary>
+
+### Prerequisites: Build UHD from Source (Optional – only for real SDR testing)
+
+If you want to test with real radios (SDRs) instead of RFsim, build UHD:
+
 ```
+# https://files.ettus.com/manual/page_build_guide.html
+sudo apt install -y autoconf automake build-essential ccache cmake cpufrequtils doxygen ethtool g++ git inetutils-tools libboost-all-dev libncurses-dev libusb-1.0-0 libusb-1.0-0-dev libusb-dev python3-dev python3-mako python3-numpy python3-requests python3-scipy python3-setuptools python3-ruamel.yaml
 
-<hr>
-
-
-2. Install UHD driver on `DU_Server`
-
-```bash
-sudo apt install -y libboost-all-dev libusb-1.0-0-dev doxygen python3-docutils python3-mako python3-numpy python3-requests python3-ruamel.yaml python3-setuptools cmake build-essential
-git clone https://github.com/NgKore47/uhd.git
-cd uhd/host
+git clone https://github.com/EttusResearch/uhd.git ~/uhd
+cd ~/uhd
+git checkout v4.8.0.0
+cd host
 mkdir build
 cd build
 cmake ../
-make -j $(number of cores you want to use)
+make -j $(nproc)
+make test # optional
 sudo make install
 sudo ldconfig
 sudo uhd_images_downloader
 ```
 
-<hr>
+### Build OAI gNB and nrUE
 
-3. Build OAI gNB
+```
+git clone https://gitlab.eurecom.fr/oai/openairinterface5g.git ~/openairinterface5g
+cd ~/openairinterface5g
+git checkout develop
 
-```bash
-cd ~/openairinterface5g/
-cd cmake_targets/
+cd ~/openairinterface5g/cmake_targets
 ./build_oai -I
 
-cd ..
-source oaienv
-cd cmake_targets/
+sudo apt install -y libforms-dev libforms-bin
 
-# For CU_Server
-./build_oai --gNB -c
-
-
-# For DU_Server
-./build_oai -w USRP --ninja --gNB -c
-
+cd ~/openairinterface5g/cmake_targets
+./build_oai -w SIMU --ninja --nrUE --gNB --build-lib "nrscope" -C
 ```
 
-<hr>
+*Note: Use `-w USRP` instead of `-w SIMU` if building for real SDR testing.*
 
-4. Make changes in the conf file of cu and du
+---
 
-##### In CU_Server
+### Configure CU and DU
 
-Make sure following parameters in `~/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu.conf` file are updated:
+Patch files (Same server):
+[https://github.com/ngkore/OAI_CU_DU_Split/tree/main/patch_files/same-server](https://github.com/ngkore/OAI_CU_DU_Split/tree/main/patch_files/same-server)
 
-```txt
-TAC                             =   1
-mcc                             =   001
-mnc                             =   01
-local_s_address                 =   CU_Server_IP
-remote_s_address                =   DU_Server_IP
-amf_ip_address                  =   192.168.70.132
-GNB_IPV4_ADDRESS_FOR_NG_AMF     =   192.168.70.129
-GNB_IPV4_ADDRESS_FOR_NGU        =   192.168.70.129
-
-// Make sure to remove sd from conf file if present
 ```
-> **NOTE:** Check [here](./patch_files/cu.patch) for `cu.patch` file
-
-
-##### In DU_Server
-
-Make sure following parameters in `~/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/du.conf` file are updated:
-
-```txt
-TAC                             =   1
-mcc                             =   001
-mnc                             =   01
-local_n_address                 =   DU_Server_IP
-remote_n_address                =   CU_Server_IP
-
-
-// Make sure to remove sd from conf file if present
-```
-> **NOTE:** Check [here](./patch_files/du.patch) for `du.patch` file
-
-<hr>
-
-5. Build OAI-Core:
-
-- Follow this docs for Ngkore: https://github.com/NgKore47/Ngkore-core
-- Follow this docs for OAI-Core: https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/doc/NR_SA_Tutorial_OAI_CN5G.md?ref_type=heads
-
-##### OAI CN5G
-- OAI CN5G pre-requisites
-```bash
-sudo apt install -y git net-tools putty
-
-# https://docs.docker.com/engine/install/ubuntu/
-sudo apt install -y ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Add your username to the docker group, otherwise you will have to run in sudo mode.
-sudo usermod -a -G docker $(whoami)
-reboot
+cd ~/openairinterface5g
+wget https://raw.githubusercontent.com/ngkore/OAI_CU_DU_Split/refs/heads/main/patch_files/same-server/cu.patch
+wget https://raw.githubusercontent.com/ngkore/OAI_CU_DU_Split/refs/heads/main/patch_files/same-server/du.patch
+git apply cu.patch
+git apply du.patch
 ```
 
-- OAI CN5G configuration files
-```bash
-wget -O ~/oai-cn5g.zip https://gitlab.eurecom.fr/oai/openairinterface5g/-/archive/develop/openairinterface5g-develop.zip?path=doc/tutorial_resources/oai-cn5g
-unzip ~/oai-cn5g.zip
-mv ~/openairinterface5g-develop-doc-tutorial_resources-oai-cn5g/doc/tutorial_resources/oai-cn5g ~/oai-cn5g
-rm -r ~/openairinterface5g-develop-doc-tutorial_resources-oai-cn5g ~/oai-cn5g.zip
+---
+
+### Run CU and DU
+
+**Run CU**
+
 ```
-- Pull OAI CN5G docker images
-```bash
-docker pull mysql:8.0
-docker pull oaisoftwarealliance/oai-amf:develop
-docker pull oaisoftwarealliance/oai-nrf:develop
-docker pull oaisoftwarealliance/oai-smf:develop
-docker pull oaisoftwarealliance/oai-udr:develop
-docker pull oaisoftwarealliance/oai-udm:develop
-docker pull oaisoftwarealliance/oai-ausf:develop
-docker pull oaisoftwarealliance/oai-spgwu-tiny:develop
-docker pull oaisoftwarealliance/trf-gen-cn5g:jammy
-docker pull oaisoftwarealliance/ims:latest
+cd ~/openairinterface5g
+sudo cmake_targets/ran_build/build/nr-softmodem -O ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
 ```
 
-- Start OAI CN5G
-```bash
-cd ~/oai-cn5g
-docker compose up -d
+**Run DU**
+
+```
+cd ~/openairinterface5g
+sudo cmake_targets/ran_build/build/nr-softmodem -O ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf --rfsim
 ```
 
+*Remove `--rfsim` if running with USRP.*
 
-- Stop OAI CN5G
-```bash
-cd ~/oai-cn5g
-docker compose down
+---
+
+### Run OAI nrUE
+
+**With USRP B210**
+
 ```
-
-
-<hr>
-
-6. Run CU and DU seperately
-
-##### Run CU
-```bash
 cd ~/openairinterface5g/cmake_targets/ran_build/build
-sudo ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa -E --continuous-tx
+sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3619200000 --ue-fo-compensation -E --uicc0.imsi 001010000000001
 ```
 
-##### Run DU
+**With RFsim**
 
-> **NOTE:** Make sure to connect SDR to DU_Server
-```bash
+```
 cd ~/openairinterface5g/cmake_targets/ran_build/build
-sudo ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa -E --continuous-tx
+sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3619200000 --uicc0.imsi 001010000000001 --rfsim
 ```
 
-<hr>
+---
 
-### Logs
-You can also check out the logs of cu and du [here](./logs/)
+### E2E Connectivity Test (RFsim Mode)
+
+UE → CN5G
+
+```
+ping 192.168.70.135 -I oaitun_ue1
+```
+
+UE → Internet
+
+```
+ping 8.8.8.8 -I oaitun_ue1
+```
+
+</details>
+
+---
+
+## 2. Running CU and DU on Different Servers
+
+<details>
+<summary><strong>Expand steps</strong></summary>
+
+### Topology
+
+* **Server 1:** CN5G + gNB CU
+* **Server 2:** gNB DU + UE
+
+### Build UHD (Optional, only on DU server)
+
+Same instructions as above. Only required for real SDR testing.
+
+---
+
+### Build OAI gNB and nrUE on *both* servers
+
+```
+git clone https://gitlab.eurecom.fr/oai/openairinterface5g.git ~/openairinterface5g
+cd ~/openairinterface5g
+git checkout develop
+
+cd ~/openairinterface5g/cmake_targets
+./build_oai -I
+sudo apt install -y libforms-dev libforms-bin
+
+cd ~/openairinterface5g/cmake_targets
+./build_oai -w SIMU --ninja --nrUE --gNB --build-lib "nrscope" -C
+```
+
+*Use `-w USRP` on DU server if using SDR.*
+
+---
+
+### Configure CU and DU
+
+Patch files:
+[https://github.com/ngkore/OAI_CU_DU_Split/tree/main/patch_files/different-servers](https://github.com/ngkore/OAI_CU_DU_Split/tree/main/patch_files/different-servers)
+
+```
+cd ~/openairinterface5g
+
+# On CU server
+wget https://raw.githubusercontent.com/ngkore/OAI_CU_DU_Split/refs/heads/main/patch_files/different-servers/cu.patch
+git apply cu.patch
+
+# On DU server
+wget https://raw.githubusercontent.com/ngkore/OAI_CU_DU_Split/refs/heads/main/patch_files/different-servers/du.patch
+git apply du.patch
+```
+
+Update IPs as shown in the patch:
+
+**CU config**
+
+```
+local_s_address = "CU_Server_IP";
+remote_s_address = "DU_Server_IP";
+```
+
+**DU config**
+
+```
+local_n_address = "DU_Server_IP";
+remote_n_address = "CU_Server_IP";
+```
+
+---
+
+### Run CU and DU
+
+**CU server**
+
+```
+cd ~/openairinterface5g
+sudo cmake_targets/ran_build/build/nr-softmodem -O ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
+```
+
+**DU server**
+
+```
+cd ~/openairinterface5g
+sudo cmake_targets/ran_build/build/nr-softmodem -O ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf --rfsim
+```
+
+*Remove `--rfsim` if running with USRP.*
+
+---
+
+### Run OAI nrUE (on DU server)
+
+**With USRP B210**
+
+```
+cd ~/openairinterface5g/cmake_targets/ran_build/build
+sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3619200000 --ue-fo-compensation -E --uicc0.imsi 001010000000001
+```
+
+**With RFsim**
+
+```
+cd ~/openairinterface5g/cmake_targets/ran_build/build
+sudo ./nr-uesoftmodem -r 106 --numerology 1 --band 78 -C 3619200000 --uicc0.imsi 001010000000001 --rfsim
+```
+
+---
+
+### E2E Connectivity Test (RFsim Mode)
+
+UE → CN5G
+
+```
+ping 192.168.70.135 -I oaitun_ue1
+```
+
+UE → Internet
+
+```
+ping 8.8.8.8 -I oaitun_ue1
+```
+
+</details>
+
+---
+
+## Logs
+
+Sample logs for CU and DU are available [here](./logs/)
+
+

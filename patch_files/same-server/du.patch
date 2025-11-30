@@ -1,0 +1,24 @@
+diff --git a/ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf b/ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf
+index fbc6de9b5e..8b2986e479 100644
+--- a/ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf
++++ b/ci-scripts/conf_files/gnb-du.sa.band78.106prb.rfsim.conf
+@@ -15,7 +15,7 @@ gNBs =
+ 
+     // Tracking area code, 0x0000 and 0xfffe are reserved values
+     tracking_area_code  =  1;
+-    plmn_list = ({ mcc = 208; mnc = 99; mnc_length = 2; snssaiList = ({ sst = 1 }, { sst = 2 }, { sst = 3 } ) });
++    plmn_list = ({ mcc = 001; mnc = 01; mnc_length = 2; snssaiList = ({ sst = 1 }, { sst = 2 }, { sst = 3 } ) });
+ 
+ 
+     nr_cellid = 12345678L;
+@@ -163,8 +163,8 @@ MACRLCs = (
+     num_cc           = 1;
+     tr_s_preference  = "local_L1";
+     tr_n_preference  = "f1";
+-    local_n_address = "192.168.71.171";
+-    remote_n_address = "192.168.71.150";
++    local_n_address = "127.0.0.4";
++    remote_n_address = "127.0.0.3";
+     local_n_portd   = 2153;
+     remote_n_portd  = 2153;
+     pusch_TargetSNRx10          = 200;

@@ -1,0 +1,40 @@
+diff --git a/ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf b/ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
+index 4294f920ad..728147b613 100644
+--- a/ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
++++ b/ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
+@@ -14,15 +14,15 @@ gNBs =
+ 
+     // Tracking area code, 0x0000 and 0xfffe are reserved values
+     tracking_area_code  =  1;
+-    plmn_list = ({ mcc = 208; mnc = 99; mnc_length = 2; snssaiList = ({ sst = 1, sd = 0xffffff }) });
++    plmn_list = ({ mcc = 001; mnc = 01; mnc_length = 2; snssaiList = ({ sst = 1, sd = 0xffffff }) });
+     @include "neighbour-config.conf"
+ 
+     nr_cellid = 12345678L;
+ 
+     tr_s_preference = "f1";
+ 
+-    local_s_address = "192.168.71.150";
+-    remote_s_address = "192.168.71.171";
++    local_s_address = "10.49.254.100";
++    remote_s_address = "10.49.254.203";
+     local_s_portd   = 2153;
+     remote_s_portd  = 2153;
+ 
+@@ -36,13 +36,13 @@ gNBs =
+ 
+ 
+     ////////// AMF parameters:
+-    amf_ip_address = ({ ipv4 = "192.168.71.132"; });
++    amf_ip_address = ({ ipv4 = "192.168.70.132"; });
+ 
+     NETWORK_INTERFACES :
+     {
+ 
+-        GNB_IPV4_ADDRESS_FOR_NG_AMF              = "192.168.71.150";
+-        GNB_IPV4_ADDRESS_FOR_NGU                 = "192.168.71.150";
++        GNB_IPV4_ADDRESS_FOR_NG_AMF              = "192.168.70.129";
++        GNB_IPV4_ADDRESS_FOR_NGU                 = "192.168.70.129";
+         GNB_PORT_FOR_S1U                         = 2152; # Spec 2152
+     };
+   }

@@ -1,0 +1,124 @@
+ubuntu@ubuntu-02:~/openairinterface5g$ sudo cmake_targets/ran_build/build/nr-softmodem -O ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf
+CMDLINE: "cmake_targets/ran_build/build/nr-softmodem" "-O" "ci-scripts/conf_files/gnb-cu.sa.band78.106prb.conf" 
+[CONFIG] function config_libconfig_init returned 0
+[UTIL]   running in SA mode (no --phy-test, --do-ra, --nsa option present)
+[OPT]    OPT disabled
+[HW]     Version: Branch: develop Abrev. Hash: 1603077171 Date: Sat Nov 29 11:16:06 2025 +0000
+[GNB_APP] Initialized RAN Context: RC.nb_nr_inst = 1, RC.nb_nr_macrlc_inst = 0, RC.nb_nr_L1_inst = 0, RC.nb_RU = 0, RC.nb_nr_CC[0] = 0
+[GNB_APP] F1AP: gNB_CU_id[0] 3584
+[GNB_APP] F1AP: gNB_CU_name[0] cu-rfsim
+[GNB_APP] Cell 0 has 1 neighbours
+[GNB_APP]    [0] neighbor ID 2816 cellId 1 PCI 1 SCS 1 SSB ARFCN 621312 TAC 1 PLMN 208.99
+[GNB_APP] Cell 1 has 1 neighbours
+[GNB_APP]    [0] neighbor ID 3584 cellId 0 PCI 0 SCS 1 SSB ARFCN 641280 TAC 1 PLMN 208.99
+[GNB_APP] SDAP layer is disabled
+[GNB_APP] Data Radio Bearer count 1
+[GNB_APP] Parsed IPv4 address for NG AMF: 192.168.70.129
+[UTIL]   threadCreate() for TASK_SCTP: creating thread with affinity ffffffff, priority 50
+[X2AP]   X2AP is disabled.
+[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50
+[UTIL]   threadCreate() for TASK_RRC_GNB: creating thread with affinity ffffffff, priority 50
+[GTPU]   Configuring GTPu
+[GTPU]   SA mode 
+[GTPU]   Configuring GTPu address : 192.168.70.129, port : 2152
+[GTPU]   Initializing UDP for local address 192.168.70.129 with port 2152
+[GTPU]   Created gtpu instance id: 89
+[UTIL]   threadCreate() for GTPrx_89: creating thread with affinity ffffffff, priority 50
+[NGAP]   Registered new gNB[0] and macro gNB id 3584
+[NGAP]   [gNB 0] check the amf registration state
+[NR_RRC] Entering main loop of NR_RRC message task
+[NR_RRC] Accepting new CU-UP ID 3584 name cu-rfsim (assoc_id -1)
+[UTIL]   threadCreate() for TASK_GNB_APP: creating thread with affinity ffffffff, priority 50
+[NGAP]   Send NGSetupRequest to AMF
+[NGAP]   3584 -> 0000e000
+[NGAP]   Supported PLMN 0: MCC=001 MNC=01
+[NGAP]   Supported slice (PLMN 0): SST=0x01 SD=000
+[NGAP]   Received NGSetupResponse from AMF
+[UTIL]   threadCreate() for TASK_GTPV1_U: creating thread with affinity ffffffff, priority 50
+[UTIL]   threadCreate() for TASK_CU_F1: creating thread with affinity ffffffff, priority 50
+[UTIL]   threadCreate() for time source realtime: creating thread with affinity ffffffff, priority 2
+[GNB_APP] [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1
+[F1AP]   Starting F1AP at CU
+[UTIL]   time manager configuration: [time source: reatime] [mode: standalone] [server IP: 127.0.0.1} [server port: 7374] (server IP/port not used)
+[F1AP]   F1AP_CU_SCTP_REQ(create socket) for 10.49.254.100 len 14
+[GTPU]   Initializing UDP for local address 10.49.254.100 with port 2153
+[GTPU]   Created gtpu instance id: 91
+[UTIL]   threadCreate() for GTPrx_91: creating thread with affinity ffffffff, priority 50
+TYPE <CTRL-C> TO TERMINATE
+[NR_RRC] Received F1 Setup Request from gNB_DU 3584 (du-rfsim) on assoc_id 16
+[NR_RRC] Accepting DU 3584 (du-rfsim), sending F1 Setup Response
+[NR_RRC] DU uses RRC version 17.3.0
+[NR_RRC] cell PLMN 001.01 Cell ID 12345678 is in service
+[NR_RRC] Decoding CCCH: RNTI fde3, payload_size 6
+[NR_RRC] [--] (cellID 0, UE ID 1 RNTI fde3) Create UE context: CU UE ID 1 DU UE ID 64995 (rnti: fde3, random ue id 2eee1cfde1000000)
+[RRC]    activate SRB 1 of UE 1
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send RRC Setup
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRCSetupComplete (RRC_CONNECTED reached)
+[NGAP]   Selected PLMN in the NG Initial UE Message: MCC=001 MNC=01
+[NGAP]   UE 1: Selected AMF 'OAI-AMF' (assoc_id 14) through selected PLMN MCC=001 MNC=01
+[NGAP]   Create UE context (ID 1) for AMF 'OAI-AMF' (assoc_id 14)
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send DL Information Transfer [42 bytes]
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRC UL Information Transfer [24 bytes]
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send DL Information Transfer [21 bytes]
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRC UL Information Transfer [60 bytes]
+[NR_RRC] [--] (cellID bc614e, UE ID 1 RNTI fde3) Selected security algorithms: ciphering 0, integrity 2
+[NR_RRC] [UE fde3] Saved security key 94
+[NR_RRC] UE 1 Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 3)
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received Security Mode Complete
+[NR_RRC] UE 1: Logical Channel DL-DCCH, Generate NR UECapabilityEnquiry (bytes 8, xid 1)
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received UE capabilities
+[NR_RRC] Send message to ngap: NGAP_UE_CAPABILITIES_IND
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send DL Information Transfer [53 bytes]
+[NR_RRC] Send message to sctp: NGAP_InitialContextSetupResponse
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRC UL Information Transfer [13 bytes]
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRC UL Information Transfer [35 bytes]
+[NGAP]   PDUSESSIONSetup initiating message
+[NR_RRC] UE 1: received PDU Session Resource Setup Request
+[NR_RRC] Added QoS flow with qfi=1, total number of QoS flows = 1
+[NR_RRC] Added PDU Session 10, (total nb of sessions = 1)
+[NR_RRC] Bearer Context Setup: PDU Session ID=10, incoming TEID=0x00000003, Addr=192.168.70.134
+[NR_RRC] Added DRB 1 to established list (PDU Session ID=10, total DRBs = 1)
+[NR_RRC] UE 1: added DRB 1 for PDU session ID 10
+[NR_RRC] [--] (cellID bc614e, UE ID 1 RNTI fde3) selecting CU-UP ID 3584 based on exact NSSAI match (1:0xffffff)
+[RRC]    UE 1 associating to CU-UP assoc_id -1 out of 1 CU-UPs
+[E1AP]   UE 1: add PDU session ID 10 (1 bearers)
+[GTPU]   [89] UE ID 1: Create tunnel TEID incoming 0x46f352c2 outgoing 0x3 to remote IPv4 192.168.70.134, IPv6 ::, port 2152
+[SDAP]   Default DRB for the created SDAP entity: DRB 1 
+[PDCP]   Added DRB 1 to UE ID 1
+[GTPU]   [91] UE ID 1: Create tunnel TEID incoming 0x92c80e60 outgoing 0xffff to remote IPv4 0.0.0.0, IPv6 ::, port 2153
+[RRC]    activate SRB 2 of UE 1
+[RRC]    UE 1 trigger UE context setup request with 1 DRBs
+[RRC]    UE fde3 replacing existing CellGroupConfig with new one received from DU
+[E1AP]   UE 1: updating PDU session ID 10 (1 bearers)
+[PDCP]   DRB 1 re-established
+[GTPU]   [91] UE ID 1: Update tunnel TEID incoming 0x92c80e60 outgoing 0x4c019906 to remote IPv4 10.49.254.203, IPv6 ::, port 2153
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Generate RRCReconfiguration (bytes 319, xid 3)
+[NR_RRC] Received E1AP Bearer Context Modification Response for UE CU-CP ID 1
+[RRC]    UE 1: PDU session ID 10 modified 1 bearers
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRCReconfigurationComplete
+[NR_RRC] PDU Session Setup: ID=10, outgoing TEID=0x46f352c2, Addr=192.168.70.129
+[NR_RRC] NGAP_PDUSESSION_SETUP_RESP: sending the message
+
+
+
+[NR_RRC] [UL] (cellID bc614e, UE ID 1 RNTI fde3) Received RRC UL Information Transfer [27 bytes]
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send DL Information Transfer [3 bytes]
+[E1AP]   releasing UE 1
+[GTPU]   [89] UE ID 1: Delete all tunnels (1 tunnels)
+[GTPU]   [91] UE ID 1: Delete all tunnels (1 tunnels)
+[NR_RRC] [DL] (cellID bc614e, UE ID 1 RNTI fde3) Send RRC Release
+[RRC]    UE 1: received bearer release complete
+[NR_RRC] removed UE CU UE ID 1/RNTI fde3 
+[NR_RRC] [--] (cellID bc614e, UE ID 1 RNTI fde3) Remove UE context
+
+
+
+[SCTP]   Received SCTP SHUTDOWN EVENT
+[F1AP]   Received SCTP state 1 for assoc_id 16, removing endpoint
+[NR_RRC] releasing DU ID 3584 (du-rfsim) on assoc_id 16
+
+
+^C
+** Caught SIGTERM, shutting down
+Returned from ITTI signal handler
+Bye.
